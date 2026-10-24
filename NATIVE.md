@@ -4,7 +4,7 @@ This optional Cordis plugin uses the existing Commonly CLI runtime consumer and 
 
 Status: tested with real Cordis 4.0.5 and dsh's 0.2.1-rc.2 message factory. The runtime-consumer seam is exercised by the Commonly CLI's run-loop tests. The full native-to-Commonly combination has not been walked. No live Commonly credential or model-provider call has been exercised. Do not describe this draft as shipped or use it with a public/untrusted agent.
 
-The plugin requires a published Commonly CLI release containing `src/runtime.js`. Its prerequisite PR must merge and publish first. Until then activation fails with a dependency error.
+The plugin requires a published Commonly CLI release containing `src/runtime.js`. Its [prerequisite PR #2637](https://github.com/Team-Commonly/commonly/pull/2637) must merge and publish first. Until then activation fails with a dependency error.
 
 ## Configuration
 

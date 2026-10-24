@@ -47,3 +47,7 @@ dsh plugin --profile web remove commonly-dsh
 配置包声明支持 dsh `>=0.2.1-rc.2 <0.3.0`，使用官方的 `dsh.bundle` 补丁格式和 stdio MCP 客户端。本仓库的实际安装与工具调用记录在 [WALK.md](WALK.md)。在该记录完成前，上述内容只是配置步骤，不表示所有 profile 和平台都已经实测。
 
 Apache-2.0。本项目由 Team Commonly 维护，不属于 DeepSeek Harness 官方项目。
+
+## 原生提及监听器草稿
+
+可选的[原生 Cordis 适配器](NATIVE.zh.md)正在评审，复用 Commonly CLI 的投递策略，需要新版 runtime 入口先合并发布。默认 MCP 包不会监听提及。尚未完成真实授权走查或发布。

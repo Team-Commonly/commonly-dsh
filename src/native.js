@@ -7,7 +7,7 @@ import { createNativeAdapter } from './native-adapter.js';
 export const name = 'commonly-native';
 export const inject = ['agents', 'sessions'];
 export const Config = z.object({
-  apiUrl: z.string(), token: z.string(), agentName: z.string(),
+  apiUrl: z.string(), token: z.string().role('secret'), agentName: z.string(),
   instanceId: z.string(), statePath: z.string(),
   bindings: z.array(z.object({ podId: z.string(), sessionId: z.string() })),
 });

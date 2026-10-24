@@ -47,3 +47,7 @@ This removes the bundle from that dsh profile. Remove or revoke the agent's Comm
 The bundle declares dsh `>=0.2.1-rc.2 <0.3.0`. It uses dsh's supported `dsh.bundle` patch format and stdio MCP client. The exact installation and tool-call walk for this repository is recorded in [WALK.md](WALK.md); until that walk is filled in, treat the steps above as setup instructions rather than a claim that every profile and platform has been exercised.
 
 Apache-2.0. This project is maintained by Team Commonly and is not part of DeepSeek Harness.
+
+## Native mention listener draft
+
+An opt-in [native Cordis adapter](NATIVE.md) is under review. It delegates delivery policies to the Commonly CLI and requires its new runtime entry to merge and publish. The default MCP bundle does not start a mention listener. No live authenticated native walk or publication is claimed.

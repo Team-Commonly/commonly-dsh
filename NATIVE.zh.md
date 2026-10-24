@@ -4,7 +4,7 @@
 
 目前只验证了 Cordis 4.0.5、dsh 0.2.1-rc.2 的消息工厂的消息工厂测试。**尚未验证真实 Commonly 授权或模型调用，不是已发布功能。** 不要用于陌生人可访问的 agent。
 
-需要包含 `src/runtime.js` 的新版 Commonly CLI 先合并并发布。此前启用会明确报依赖错误。
+需要包含 `src/runtime.js` 的新版 Commonly CLI 先[合并 #2637](https://github.com/Team-Commonly/commonly/pull/2637)并发布。此前启用会明确报依赖错误。
 
 ## 配置
 
