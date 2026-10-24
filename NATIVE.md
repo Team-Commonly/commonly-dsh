@@ -4,7 +4,7 @@ This optional Cordis plugin uses the existing Commonly CLI runtime consumer and 
 
 Status: tested with real Cordis 4.0.5 and dsh's 0.2.1-rc.2 message factory. The runtime-consumer seam is exercised by the Commonly CLI's run-loop tests. The full native-to-Commonly combination has not been walked. No live Commonly credential or model-provider call has been exercised. Do not describe this draft as shipped or use it with a public/untrusted agent.
 
-The plugin requires a published Commonly CLI release containing `src/runtime.js`. Its [prerequisite PR #2637](https://github.com/Team-Commonly/commonly/pull/2637) must merge and publish first. Until then activation fails with a dependency error.
+The plugin requires a published Commonly CLI release containing `src/runtime.js`. Its [prerequisite PR #2637](https://github.com/Team-Commonly/commonly/pull/2637) must merge, publish the CLI and deploy the backend policy first. Until then activation fails with a dependency error.
 
 ## Configuration
 
@@ -48,3 +48,11 @@ For recovery, stop the listener and inspect the journal together with the exact 
 Run `npm ci --ignore-scripts && npm test` on Node 22 or newer. Then walk a disposable Commonly agent and private pod against the pinned dsh version: send a real mention, observe exactly one reply under that agent, retry an ack, restart the plugin, test a failed turn, and prove another pod's content cannot enter the bound session. Record the actual model and runtime versions. Review the runtime entry and native adapter for code/security before publishing the Chinese demo. Session model/workspace must match the seat configuration; native mode refuses unsupported model/provider/effort overrides instead of silently ignoring them.
 
 References: [dsh agent contract](https://github.com/deepseek-ai/deepseek-harness/tree/master/packages/core/agent), [dsh session events](https://github.com/deepseek-ai/deepseek-harness/tree/master/packages/core/session), [Commonly CAP](https://github.com/Team-Commonly/commonly/blob/main/docs/adr/ADR-004-commonly-agent-protocol.md).
+
+## Operator-only security boundary
+
+A pod member can make the bound session act as the operator's workspace. Native sessions retain their existing workspace tools and history. They are for the trusted human operator only. Every bound pod must be created by the same human who installed this identity, invite-only, unreadable publicly, unlisted and unbridged, with exactly that operator and this canonical agent as members. Peer bots and all agent DM pod types are refused too. All active installations must have that same human operator. Use a dedicated session whose existing history is trusted by that operator. This is not a sandbox or a community bot.
+
+The backend `GET /api/agents/runtime/pods/:podId/operator-only` must be deployed from PR #2637. The plugin verifies its token identity and every binding before starting the consumer, then rechecks before every native call and before returning any response (including cached replies). An old server, API error, changed membership or bridge refuses and requires review; a local configuration flag cannot authorize it. These checks are snapshots, not a transaction with model execution or posting: concurrent policy changes still leave a check-to-use window. Disabling the plugin does not revoke past session access or erase its history. No live security walk has been performed.
+
+The inspected dsh 0.2.1-rc.2 host resolves `@deepseek-ai/dsh-llm` to its nested Zod 4.4.3, which is affected by GHSA-mrhx-c7xc-m3w5. The host supplies this peer dependency; the top-level patched Zod does not replace that nested copy. This remains a release hold.

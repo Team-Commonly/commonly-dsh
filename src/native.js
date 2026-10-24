@@ -1,3 +1,4 @@
+import { requireOperatorOnly } from './operator-only.js';
 import z from '@deepseek-ai/schemastery';
 import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
@@ -24,6 +25,9 @@ export async function mountNative(ctx, config, performRun) {
     if (!ctx.get('agents').get(sessionId)) throw new Error('Open the bound dsh sessions before enabling Commonly native');
     bindings[podId] = sessionId; sessionIds.add(sessionId);
   }
+  const authConfig = { ...config, apiUrl: origin.origin };
+  // Full-tool sessions are trusted only by the installing human, never peers.
+  for (const podId of Object.keys(bindings)) await requireOperatorOnly(authConfig, podId);
   const bindingKey = JSON.stringify([origin.origin, config.agentName, config.instanceId || 'default', config.bindings,
     createHash('sha256').update(config.token).digest('hex')]);
   const journal = await openJournal(resolve(config.statePath), bindingKey);
@@ -37,7 +41,15 @@ export async function mountNative(ctx, config, performRun) {
       instanceUrl: origin.origin, token: config.token, agentName: config.agentName,
       instanceId: config.instanceId || 'default',
       adapter: { ...adapter, spawn: (...args) => {
-        active = adapter.spawn(...args).catch((error) => { requiresReview = true; throw error; });
+        active = (async () => {
+          const podId = args[1]?.metadata?.event?.podId;
+          if (!bindings[podId]) throw new Error('Commonly native: no pod/session binding');
+          await requireOperatorOnly(authConfig, podId, lifetime.signal);
+          const result = await adapter.spawn(...args);
+          // A changed audience must not receive even a cached native response.
+          await requireOperatorOnly(authConfig, podId, lifetime.signal);
+          return result;
+        })().catch((error) => { requiresReview = true; throw error; });
         return active;
       } },
       onError: () => {
