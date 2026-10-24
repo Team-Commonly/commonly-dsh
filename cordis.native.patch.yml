@@ -1,0 +1,15 @@
+# Optional native listener; configure and enable explicitly after review.
+# Native mode uses the CLI's per-turn credentials, never the MCP row's shared token.
+- id: mcp-commonly
+  disabled: true
+- insert:
+    - id: commonly-native
+      name: commonly-dsh/native
+      disabled: true
+      config:
+        apiUrl: !!js process.env.COMMONLY_API_URL
+        token: !!js process.env.COMMONLY_AGENT_TOKEN
+        agentName: !!js process.env.COMMONLY_AGENT_NAME
+        instanceId: default
+        statePath: !!js process.env.COMMONLY_DSH_STATE_PATH
+        bindings: []

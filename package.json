@@ -8,17 +8,36 @@
     "url": "git+https://github.com/Team-Commonly/commonly-dsh.git"
   },
   "engines": {
-    "dsh": ">=0.2.1-rc.2 <0.3.0"
+    "dsh": ">=0.2.1-rc.2 <0.3.0",
+    "node": ">=22"
   },
   "files": [
     "cordis.patch.yml",
     "README.md",
     "README.zh.md",
-    "WALK.md"
+    "WALK.md",
+    "src",
+    "cordis.native.patch.yml",
+    "NATIVE.md",
+    "NATIVE.zh.md",
+    "docs"
   ],
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
     }
+  },
+  "type": "module",
+  "exports": {
+    "./native": "./src/native.js"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.0",
+    "@deepseek-ai/dsh-llm": "0.2.1-rc.2",
+    "@deepseek-ai/schemastery": "^3.18.5",
+    "@commonlyai/cli": ">=0.1.155 <0.2.0"
   }
 }
