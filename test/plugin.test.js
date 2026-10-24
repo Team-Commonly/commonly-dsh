@@ -34,6 +34,8 @@ test('Cordis mount delegates consumer policies to CLI, drives exact native turn,
   try {
     await done;
     assert.equal(runner.agentName, 'fixture'); assert.equal(runner.adapter.name, 'dsh');
+    runner.onError(new Error('temporary network failure'));
+    assert.equal(stopped, 0, 'network errors retain the CLI retry policy');
     const result = await runner.adapter.spawn('Received mention', options);
     assert.deepEqual(result, { text: 'Hello teammate', newSessionId: 'dedicated-session' });
     h.agent.followup = () => { throw Error('must not regenerate'); };

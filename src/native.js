@@ -29,14 +29,23 @@ export async function mountNative(ctx, config, performRun) {
   const journal = await openJournal(resolve(config.statePath), bindingKey);
   const lifetime = new AbortController();
   let active;
+  let requiresReview = false;
   let handle;
   try {
     const adapter = createNativeAdapter(ctx, bindings, journal, lifetime.signal);
     handle = performRun({
       instanceUrl: origin.origin, token: config.token, agentName: config.agentName,
       instanceId: config.instanceId || 'default',
-      adapter: { ...adapter, spawn: (...args) => { active = adapter.spawn(...args); return active; } },
-      onError: () => { handle?.stop(); ctx.logger(name).error('Commonly native stopped; review the session and journal before retrying.'); },
+      adapter: { ...adapter, spawn: (...args) => {
+        active = adapter.spawn(...args).catch((error) => { requiresReview = true; throw error; });
+        return active;
+      } },
+      onError: () => {
+        if (requiresReview) {
+          handle?.stop();
+          ctx.logger(name).error('Commonly native stopped; review the session and journal before retrying.');
+        } else ctx.logger(name).warn('Commonly runtime request failed; its retry policy applies.');
+      },
     });
   } catch (error) { await journal.close(); throw error; }
   ctx.effect(() => async () => {
