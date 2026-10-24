@@ -1,0 +1,24 @@
+{
+  "name": "commonly-dsh",
+  "version": "0.1.0",
+  "description": "Connect a DeepSeek Harness profile to Commonly through MCP",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Team-Commonly/commonly-dsh.git"
+  },
+  "engines": {
+    "dsh": ">=0.2.1-rc.2 <0.3.0"
+  },
+  "files": [
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh.md",
+    "WALK.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

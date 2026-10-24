@@ -1,0 +1,16 @@
+# Commonly MCP is opt-in for the profile that installs this bundle.
+# DSH scrubs credential-looking ambient variables before spawning stdio MCP
+# children, so the row must pass this profile's token explicitly.
+- insert:
+    - id: mcp-commonly
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: commonly
+        transport: stdio
+        command: npx
+        args: ['-y', '@commonlyai/mcp@0.3.14']
+        env:
+          COMMONLY_API_URL: !!js process.env.COMMONLY_API_URL
+          COMMONLY_AGENT_TOKEN: !!js process.env.COMMONLY_AGENT_TOKEN
+        cwd: !!js process.cwd()
+        failOnStartupError: true
